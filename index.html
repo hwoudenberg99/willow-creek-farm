@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Willow Creek Farm</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-wrap">
+    <canvas id="game" width="960" height="640"></canvas>
+
+    <!-- HUD -->
+    <div id="hud-top">
+      <div id="clock">Day 1 &nbsp; 6:00 AM</div>
+      <div id="coins">🪙 <span id="coin-count">30</span></div>
+      <div id="energy-box">⚡ <div id="energy-bar"><div id="energy-fill"></div></div></div>
+      <div id="vocab">📖 Words: <span id="vocab-count">0</span></div>
+    </div>
+
+    <!-- Controls hint -->
+    <div id="controls-hint">
+      <b>WASD</b> move · <b>E</b> interact · <b>1–5</b> tools · <b>I</b> bag · <b>B</b> phrasebook
+    </div>
+
+    <!-- Hotbar -->
+    <div id="hotbar">
+      <div class="slot selected" data-slot="0"><span class="icon">⛏️</span><span class="key">1</span><span class="label">Hoe</span></div>
+      <div class="slot" data-slot="1"><span class="icon">💧</span><span class="key">2</span><span class="label">Water</span></div>
+      <div class="slot" data-slot="2"><span class="icon">🌱</span><span class="key">3</span><span class="label">Seeds</span></div>
+      <div class="slot" data-slot="3"><span class="icon">🖐️</span><span class="key">4</span><span class="label">Harvest</span></div>
+      <div class="slot" data-slot="4"><span class="icon">🎣</span><span class="key">5</span><span class="label">Rod</span></div>
+    </div>
+
+    <!-- Dialogue box -->
+    <div id="dialogue" class="hidden">
+      <div id="dialogue-name"></div>
+      <div id="dialogue-text"></div>
+      <div id="dialogue-gloss"></div>
+      <div id="dialogue-choices"></div>
+      <div id="dialogue-next">▼ E</div>
+    </div>
+
+    <!-- Note reader -->
+    <div id="note-panel" class="hidden">
+      <div id="note-title"></div>
+      <div id="note-entries"></div>
+      <div class="panel-footer">Added to your phrasebook! &nbsp; ▼ E to close</div>
+    </div>
+
+    <!-- Phrasebook -->
+    <div id="phrasebook" class="hidden">
+      <div class="panel-title">📖 Phrasebook</div>
+      <div id="phrasebook-entries"></div>
+      <div class="panel-footer">Find signs and notes around town to learn more words. ▼ B to close</div>
+    </div>
+
+    <!-- Shop -->
+    <div id="shop-panel" class="hidden">
+      <div id="shop-title" class="panel-title"></div>
+      <div id="shop-coins" class="shop-coins"></div>
+      <div id="shop-buy-section">
+        <div class="section-label">Buy</div>
+        <div id="shop-buy"></div>
+      </div>
+      <div id="shop-sell-section">
+        <div class="section-label">Sell</div>
+        <div id="shop-sell"></div>
+      </div>
+      <button id="shop-chat" class="wide-btn">💬 Practice talking</button>
+      <div class="panel-footer">▼ E to close</div>
+    </div>
+
+    <!-- Inventory / bag -->
+    <div id="inventory" class="hidden">
+      <div class="panel-title">🎒 Bag</div>
+      <div id="inventory-entries"></div>
+      <div class="panel-footer">Eat food to restore energy ⚡ &nbsp; ▼ I to close</div>
+    </div>
+
+    <!-- Language selection (start screen) -->
+    <div id="start-screen">
+      <div id="start-box">
+        <h1>🌾 Willow Creek Farm</h1>
+        <p class="tagline">Learn a language by living in the valley</p>
+        <p class="start-info">
+          The villagers only speak their own language. Explore, find notes and signs
+          to build your phrasebook, and choose your words carefully — good
+          conversations grow friendships. ♥ Sell your harvest to buy seeds,
+          bread, and a fishing rod!
+        </p>
+        <p class="start-question">Which language do you want to learn?</p>
+        <div id="lang-buttons"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/constants.js"></script>
+  <script src="js/lang.js"></script>
+  <script src="js/world.js"></script>
+  <script src="js/entities.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
