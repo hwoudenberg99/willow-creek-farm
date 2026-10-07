@@ -9,7 +9,14 @@ your friendships.
 
 ## 🚀 How to play
 
-**No installation needed.** The game is plain HTML5/JavaScript and runs offline in any modern browser.
+### ▶ [Play it in your browser](https://hwoudenberg99.github.io/willow-creek-farm/)
+
+No download needed — the game runs right on GitHub Pages, and your progress
+autosaves in your browser.
+
+### Or run it locally
+
+The game is plain HTML5/JavaScript and runs offline in any modern browser.
 
 1. Download the latest release zip (or clone this repo)
 2. Extract it anywhere
