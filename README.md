@@ -40,6 +40,7 @@ then visit http://localhost:8123.
 - **Fishing**: once you own a rod and bait, cast into the pond and wait for a bite 🎣
 - **Energy**: working the land costs energy — eat bread, parsnips, or fish to recover, or rest overnight
 - **Day/night cycle** with a full in-game clock
+- **Autosave**: progress is saved in your browser every few seconds — pick **Continue** on the title screen to resume right where you left off
 
 | Shopping | Fishing |
 |---|---|

@@ -85,6 +85,80 @@ function uiOpen() {
          state.shopOpen || state.inventoryOpen || state.fishing;
 }
 
+// ---------------- Saving / loading ----------------
+const SAVE_KEY = "willow-creek-farm-save";
+
+function saveGame() {
+  if (!state.language) return;
+  try {
+    // Tilled/watered soil is the only outdoor terrain the player changes
+    const tiles = [];
+    const om = scenes.outdoor.map;
+    for (let y = 0; y < MAP_H; y++) {
+      for (let x = 0; x < MAP_W; x++) {
+        if (om[y][x] === T.TILLED || om[y][x] === T.WATERED) {
+          tiles.push([x, y, om[y][x]]);
+        }
+      }
+    }
+    const data = {
+      language: state.language,
+      coins: state.coins, seeds: state.seeds, parsnips: state.parsnips,
+      bread: state.bread, fish: state.fish, bait: state.bait, rod: state.rod,
+      energy: state.energy, tool: state.tool,
+      day: state.day, hour: state.hour, minute: state.minute,
+      vocab: [...state.vocab],
+      readNotes: [...state.readNotes],
+      bonds: npcs.map((n) => ({ key: n.key, bond: n.bond, topicIndex: n.topicIndex })),
+      crops: [...crops],
+      tiles,
+      player: { x: player.x, y: player.y, scene: currentScene },
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  } catch (e) { /* storage unavailable — play without saving */ }
+}
+
+function hasSave() {
+  try { return !!localStorage.getItem(SAVE_KEY); } catch (e) { return false; }
+}
+
+function clearSave() {
+  try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+}
+
+function loadGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    const d = JSON.parse(raw);
+    if (!LANGS[d.language]) return false;
+
+    state.language = d.language;
+    state.coins = d.coins; state.seeds = d.seeds; state.parsnips = d.parsnips;
+    state.bread = d.bread; state.fish = d.fish; state.bait = d.bait; state.rod = d.rod;
+    state.energy = d.energy;
+    state.day = d.day; state.hour = d.hour; state.minute = d.minute;
+    state.vocab = new Map(d.vocab);
+    state.readNotes = new Set(d.readNotes);
+    for (const b of d.bonds) {
+      const npc = npcs.find((n) => n.key === b.key);
+      if (npc) { npc.bond = b.bond; npc.topicIndex = b.topicIndex; }
+    }
+    crops.clear();
+    for (const [k, c] of d.crops) crops.set(k, c);
+    for (const [x, y, t] of d.tiles) scenes.outdoor.map[y][x] = t;
+
+    setScene(scenes[d.player.scene] ? d.player.scene : "outdoor");
+    player.x = d.player.x;
+    player.y = d.player.y;
+    selectTool(d.tool || 0);
+    updateHud();
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 // ---------------- Start screen ----------------
 const langButtonsEl = document.getElementById("lang-buttons");
 for (const [code, info] of Object.entries(LANGS)) {
@@ -92,13 +166,37 @@ for (const [code, info] of Object.entries(LANGS)) {
   btn.className = "lang-btn";
   btn.innerHTML = '<span class="flag">' + info.flag + "</span>" + info.name;
   btn.addEventListener("click", () => {
+    clearSave();                               // picking a language = new game
     state.language = code;
     document.getElementById("start-screen").classList.add("hidden");
     toast("Welcome! Talk to villagers and look for signs 📖");
     updateHud();
+    saveGame();
   });
   langButtonsEl.appendChild(btn);
 }
+
+if (hasSave()) {
+  document.getElementById("continue-btn").classList.remove("hidden");
+  document.getElementById("new-game-note").classList.remove("hidden");
+}
+document.getElementById("continue-btn").addEventListener("click", () => {
+  if (loadGame()) {
+    document.getElementById("start-screen").classList.add("hidden");
+    toast("Welcome back! 💾 Day " + state.day);
+  } else {
+    toast("Save file was corrupted — starting fresh");
+    document.getElementById("continue-btn").classList.add("hidden");
+    document.getElementById("new-game-note").classList.add("hidden");
+  }
+});
+
+// Autosave: every 5 seconds and when the page closes or is hidden
+setInterval(saveGame, 5000);
+window.addEventListener("beforeunload", saveGame);
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") saveGame();
+});
 
 // ---------------- Input ----------------
 const keys = new Set();

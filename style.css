@@ -434,3 +434,14 @@ body {
 }
 
 #inventory.hidden { display: none; }
+
+/* ---------- Save / continue ---------- */
+#continue-btn { border-color: #ffd75e; }
+#continue-btn.hidden, #new-game-note.hidden { display: none; }
+
+#new-game-note {
+  margin-top: 10px;
+  font-size: 11.5px;
+  color: #c9a36a;
+  font-style: italic;
+}
